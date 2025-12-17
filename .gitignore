@@ -1,0 +1,22 @@
+# ===== OS =====
+.DS_Store
+
+# ===== IDE =====
+.idea/
+.vscode/
+
+# ===== Frontend =====
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# ===== Go Backend =====
+**/bin/
+**/tmp/
+**/*.log
+**/kitex_gen/
+**/.hz/
+
+# ===== Go =====
+*.exe
+*.out

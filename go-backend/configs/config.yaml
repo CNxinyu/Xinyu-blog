@@ -1,8 +1,0 @@
-server:
-  port: 8080
-
-mysql:
-  dsn: root:123456@tcp(127.0.0.1:3306)/xinyu_blog?charset=utf8mb4
-
-redis:
-  addr: 127.0.0.1:6379

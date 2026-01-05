@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 继承父项目（java-backend 根 POM） -->
+    <parent>
+        <groupId>com.xinyu</groupId>
+        <artifactId>java-backend</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath> <!-- 指向父 POM 的相对路径，可根据实际目录调整 -->
+    </parent>
+
+    <!-- 当前模块坐标 -->
+    <artifactId>common</artifactId>
+    <packaging>jar</packaging>
+
+    <!-- 可选：模块名称和描述 -->
+    <name>common</name>
+    <description>公共模块：实体类、工具类、通用配置等</description>
+
+    <properties>
+        <!-- 子模块可覆盖父模块的属性，如需特殊版本可在此定义 -->
+        <java.version>25</java.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- Spring Boot Web Starter（如果 common 模块需要处理 Web 相关工具类，可保留；纯公共模块可删除） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- MyBatis-Plus Boot Starter -->
+        <!-- 版本由父 POM 的 dependencyManagement 管理（推荐已添加 3.5.8） -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+        </dependency>
+
+        <!-- MySQL 驱动（运行时依赖） -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 以下为 common 模块常用推荐依赖，可按需保留或删除 -->
+
+        <!-- Hutool 工具类（强烈推荐） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- Apache Commons Lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 配置处理器（用于自定义配置提示） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 测试依赖（common 模块也建议写单元测试） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.0</version>  <!-- 或最新版 -->
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven 插件（便于子模块独立打包运行） -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>  <!-- common 模块不需要 repackage -->
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

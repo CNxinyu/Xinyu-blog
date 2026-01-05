@@ -1,1 +1,9 @@
-这是一个博客项目。目前规划是前端vue，react各写一版，后端springboot，go各写一版本
+Time:2025.12.29
+
+React-frontend 主页前端
+
+Go-backend 主页后端
+
+Springboot- backend 管理系统后端
+
+Vue-frontend 管理系统前端

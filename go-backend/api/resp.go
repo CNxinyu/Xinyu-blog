@@ -1,18 +1,4 @@
 ﻿package api
 
-import "github.com/gin-gonic/gin"
-
-func OK(c *gin.Context, data interface{}) {
-    c.JSON(200, gin.H{
-        "code": 0,
-        "msg":  "success",
-        "data": data,
-    })
-}
-
-func Fail(c *gin.Context, code int) {
-    c.JSON(200, gin.H{
-        "code": code,
-        "msg":  "error",
-    })
-}
+// Deprecated: response helpers moved to `api/resp` package.
+// Keep this file as a placeholder to avoid breaking imports that reference the `api` package directory.

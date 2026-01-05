@@ -4,8 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-
 )
 
 func NewEngine() *gin.Engine {
@@ -23,8 +21,7 @@ func NewEngine() *gin.Engine {
 	})
 
 	// 业务路由
-	registerAdminRoutes(r)
-	registerCustomerRoutes(r)
+	registerUserRoutes(r)
 
 	return r
 }

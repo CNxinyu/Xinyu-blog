@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api.test;
+
+option go_package = "go-backend/api/test;test";
+option java_multiple_files = true;
+option java_package = "api.test";
+
+service Test {
+	// rpc CreateTest (CreateTestRequest) returns (CreateTestReply);
+	// rpc UpdateTest (UpdateTestRequest) returns (UpdateTestReply);
+	// rpc DeleteTest (DeleteTestRequest) returns (DeleteTestReply);
+	rpc GetTest (GetTestRequest) returns (GetTestReply);
+	// rpc ListTest (ListTestRequest) returns (ListTestReply);
+}
+
+// message CreateTestRequest {}
+// message CreateTestReply {}
+
+// message UpdateTestRequest {}
+// message UpdateTestReply {}
+
+// message DeleteTestRequest {}
+// message DeleteTestReply {}
+
+enum TYPE {
+	DEFAULT = 0;
+	DIGIT = 1;
+	LETTER = 2;
+	MIXED = 3;
+}
+
+/// 请求参数结构
+message GetTestRequest {
+	uint32 length = 1;
+	TYPE type = 2;
+}
+/// 返回参数结构
+message GetTestReply {
+	string code = 1;
+}
+
+// message ListTestRequest {}
+// message ListTestReply {}

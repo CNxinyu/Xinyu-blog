@@ -6,6 +6,7 @@ option go_package = "go-backend/api/test;test";
 option java_multiple_files = true;
 option java_package = "api.test";
 
+// 测试类
 service Test {
 	// rpc CreateTest (CreateTestRequest) returns (CreateTestReply);
 	// rpc UpdateTest (UpdateTestRequest) returns (UpdateTestReply);

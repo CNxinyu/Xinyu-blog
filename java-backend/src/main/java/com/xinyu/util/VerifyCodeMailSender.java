@@ -32,12 +32,12 @@ public class VerifyCodeMailSender {
 
     private String getSubjectByScene(String scene) {
         return switch (scene) {
-            case "REGISTER" -> "【Xinyu Blog】注册验证码";
-            case "LOGIN" -> "【Xinyu Blog】登录验证码";
-            case "RESET_PASSWORD" -> "【Xinyu Blog】找回密码验证码";
-            case "BIND" -> "【Xinyu Blog】绑定验证码";
-            case "CHANGE" -> "【Xinyu Blog】变更验证码";
-            default -> "【Xinyu Blog】验证码";
+            case "REGISTER" -> "【心羽博客】注册验证码";
+            case "LOGIN" -> "【心羽博客】登录验证码";
+            case "RESET_PASSWORD" -> "【心羽博客】找回密码验证码";
+            case "BIND" -> "【心羽博客】绑定验证码";
+            case "CHANGE" -> "【心羽博客】变更验证码";
+            default -> "【心羽博客】验证码";
         };
     }
 

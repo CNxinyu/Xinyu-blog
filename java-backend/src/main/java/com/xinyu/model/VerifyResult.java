@@ -20,7 +20,7 @@ public class VerifyResult {
         return VerifyResult.builder()
                 .verified(true)
                 .errorCode("OK")
-                .message("Verified successfully")
+                .message("校验成功")
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class VerifyResult {
         return VerifyResult.builder()
                 .verified(false)
                 .errorCode("CODE_MISMATCH")
-                .message("Code mismatch")
+                .message("验证码错误")
                 .remainingAttempts(remaining)
                 .build();
     }
@@ -37,7 +37,7 @@ public class VerifyResult {
         return VerifyResult.builder()
                 .verified(false)
                 .errorCode("TOO_MANY_ATTEMPTS")
-                .message("Too many failed attempts, locked")
+                .message("尝试次数过多，已锁定")
                 .remainingAttempts(0)
                 .lockSeconds(lockSeconds)
                 .build();
@@ -47,7 +47,7 @@ public class VerifyResult {
         return VerifyResult.builder()
                 .verified(false)
                 .errorCode("TOO_MANY_ATTEMPTS")
-                .message("Account is currently locked")
+                .message("账户目前已被锁定")
                 .remainingAttempts(0)
                 .lockSeconds(lockLeft)
                 .build();
@@ -57,7 +57,7 @@ public class VerifyResult {
         return VerifyResult.builder()
                 .verified(false)
                 .errorCode("EXPIRED")
-                .message("Verification ID not found or expired")
+                .message("未找到验证 ID 或验证 ID 已过期")
                 .build();
     }
 }

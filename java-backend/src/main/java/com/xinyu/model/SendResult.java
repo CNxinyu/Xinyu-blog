@@ -21,7 +21,7 @@ public class SendResult {
         return SendResult.builder()
                 .success(true)
                 .errorCode("OK")
-                .message("Sent successfully")
+                .message("成功发送")
                 .verificationId(vid)
                 .ttlSeconds(ttl)
                 .cooldownSeconds(cd)
@@ -32,7 +32,7 @@ public class SendResult {
         return SendResult.builder()
                 .success(false)
                 .errorCode("TOO_MANY_REQUESTS")
-                .message("Request too frequent, please wait")
+                .message("请求过于频繁，请稍候")
                 .cooldownSeconds(cooldownLeft)
                 .build();
     }
@@ -41,7 +41,7 @@ public class SendResult {
         return SendResult.builder()
                 .success(false)
                 .errorCode("TOO_MANY_ATTEMPTS")
-                .message("Receiver is temporarily blocked")
+                .message("接收器暂时被阻止")
                 .cooldownSeconds(lockLeft)
                 .build();
     }

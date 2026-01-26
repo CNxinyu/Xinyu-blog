@@ -24,7 +24,7 @@ public class VerifyCodeGrpcImpl extends VerifyCodeServiceGrpc.VerifyCodeServiceI
     public void sendVerifyCode(SendVerifyCodeRequest request,
                                io.grpc.stub.StreamObserver<SendVerifyCodeReply> responseObserver) {
 
-        log.info("Received SendVerifyCode request for: receiver={}, channel={}", request.getReceiver(), request.getChannel());
+        log.info("已收到 SendVerifyCode 请求 for: receiver={}, channel={}", request.getReceiver(), request.getChannel());
 
         // 仅做邮件通道（基础版）
         if (request.getChannel() != Channel.EMAIL) {
@@ -68,7 +68,7 @@ public class VerifyCodeGrpcImpl extends VerifyCodeServiceGrpc.VerifyCodeServiceI
     public void verifyCode(VerifyCodeRequest request,
                            io.grpc.stub.StreamObserver<VerifyCodeReply> responseObserver) {
 
-        log.info("Received VerifyCode request for vid: {}", request.getVerificationId());
+        log.info("已收到 SendVerifyCode 请求 vid: {}", request.getVerificationId());
 
         var r = logic.verify(request.getVerificationId(), request.getCode());
 
@@ -102,7 +102,7 @@ public class VerifyCodeGrpcImpl extends VerifyCodeServiceGrpc.VerifyCodeServiceI
     public void consumeCode(ConsumeCodeRequest request,
                             io.grpc.stub.StreamObserver<ConsumeCodeReply> responseObserver) {
 
-        log.info("Received ConsumeCode request for vid: {}", request.getVerificationId());
+        log.info("收到 ConsumeCode 请求 vid: {}", request.getVerificationId());
 
         boolean ok = logic.consumeCode(request.getVerificationId());
 
@@ -114,7 +114,7 @@ public class VerifyCodeGrpcImpl extends VerifyCodeServiceGrpc.VerifyCodeServiceI
                     .setConsumedAt(tsNow());
         } else {
             b.setCode(ErrorCode.NOT_FOUND)
-                    .setMessage("Code not verified or already consumed/expired")
+                    .setMessage("代码未验证或已被使用/过期")
                     .setConsumed(false);
         }
 

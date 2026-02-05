@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: verify-code-grpc
+  grpc:
+    server:
+      port: 9090
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: 18156944123@163.com
+    password: HUOUWJGYIECRSNBH   # 网易邮箱 SMTP 授权码（环境变量）${MAIL_163_AUTH_CODE}
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          timeout: 5000
+          connectiontimeout: 5000
+          writetimeout: 5000
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package verify.v1;
+
+option go_package = "go-backend/api/verify/v1;verifypb";
+
+// 验证码服务
+service VerifyCodeService {
+    // 获取验证码
+  rpc GetVerifyCode(GetVerifyCodeRequest) returns (GetVerifyCodeReply);
+}
+
+enum TYPE {
+  DEFAULT = 0; // 等同 DIGIT
+  DIGIT = 1;   // 纯数字
+  LETTER = 2;  // 纯字母
+  MIXED = 3;   // 数字 + 字母
+}
+
+/// 请求参数
+message GetVerifyCodeRequest {
+  uint32 length = 1;
+  TYPE type = 2;
+}
+
+/// 返回参数
+message GetVerifyCodeReply {
+  int64 code = 1;
+  string message = 2;
+  string verify_code = 3;
+  int32 verify_code_time = 4;
+  int32 verify_code_life = 5;
+
+}

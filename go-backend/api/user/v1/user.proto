@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+// Import google api annotations
+import "google/api/annotations.proto";
+
+option go_package = "go-backend/api/user/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.user.v1";
+
+// 用户相关服务
+service User {
+	// 获取验证码
+	rpc GetVerifyCode (GetVerifyCodeRequest) returns (GetVerifyCodeReply){
+		option (google.api.http) = {
+			get: "/api/v1/user/get-verify-code/{telephone}"
+		};
+	};
+	// rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
+	// rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply);
+	// rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
+	// rpc GetUser (GetUserRequest) returns (GetUserReply);
+	// rpc ListUser (ListUserRequest) returns (ListUserReply);
+}
+                                                                                                         
+message GetVerifyCodeRequest {
+  string telephone = 1;
+}
+message GetVerifyCodeReply {
+  int64 code = 1;
+  string message = 2;
+  string verify_code = 3;
+  int32 verify_code_time = 4;
+  int32 verify_code_life = 5;
+}
+
+// message CreateUserRequest {}
+// message CreateUserReply {}
+
+// message UpdateUserRequest {}
+// message UpdateUserReply {}
+
+// message DeleteUserRequest {}
+// message DeleteUserReply {}
+
+// message GetUserRequest {}
+// message GetUserReply {}
+
+// message ListUserRequest {}
+// message ListUserReply {}

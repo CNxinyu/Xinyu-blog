@@ -1,6 +1,11 @@
 package com.xinyu.common.mybatis.typehandler;
 
 import com.xinyu.auth.mapper.RefreshTokenMapper;
+import com.xinyu.article.mapper.ArticleMapper;
+import com.xinyu.article.mapper.ArticleTagMapper;
+import com.xinyu.article.mapper.CategoryMapper;
+import com.xinyu.article.mapper.TagMapper;
+import com.xinyu.comment.mapper.CommentMapper;
 import com.xinyu.user.mapper.UserMapper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -48,6 +53,16 @@ class PostgreSqlUuidTypeHandlerTest {
         assertThatCode(() -> configuration.addMapper(RefreshTokenMapper.class))
                 .doesNotThrowAnyException();
         assertThatCode(() -> configuration.addMapper(UserMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(ArticleMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(ArticleTagMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(CategoryMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(TagMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(CommentMapper.class))
                 .doesNotThrowAnyException();
     }
 }

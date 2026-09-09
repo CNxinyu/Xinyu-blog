@@ -34,6 +34,7 @@
 		<mybatis-plus.version>3.5.17</mybatis-plus.version>
 		<springdoc.version>3.0.3</springdoc.version>
 		<testcontainers.version>2.0.4</testcontainers.version>
+		<commonmark.version>0.24.0</commonmark.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -91,6 +92,31 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>${commonmark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-tables</artifactId>
+			<version>${commonmark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-strikethrough</artifactId>
+			<version>${commonmark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-autolink</artifactId>
+			<version>${commonmark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-heading-anchor</artifactId>
+			<version>${commonmark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>

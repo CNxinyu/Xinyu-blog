@@ -28,6 +28,37 @@
 
 更新时间：2026-09-09
 
+### 第三阶段：文章系统
+
+已完成：
+
+- 新增文章、分类、标签和文章标签关联模型；新增 `V3__create_articles_taxonomy.sql`，包含 slug 唯一索引、文章状态约束、分类/标签索引和外键级联策略。
+- 新增评论模型和 `V4__create_comments.sql`，支持评论回复、待审核/通过/拒绝状态、审核查询索引和删除回复级联。
+- 公开文章接口：`GET /api/articles`、`GET /api/articles/{slug}`，只返回已发布文章，支持分页、关键词、分类和标签筛选。
+- 管理员文章接口：`GET/POST /api/admin/articles`、`GET/PUT/DELETE /api/admin/articles/{id}`、`POST /draft`、`/publish`、`/archive`、`POST /preview`。
+- 文章写入支持 slug 编辑、草稿保存、发布前标题/分类/非空 Markdown 校验、发布/归档状态流转以及文章标签批量替换；V1 未实现 Redirect History。
+- 引入 CommonMark GFM 渲染：支持标题锚点、表格、删除线、自动链接、列表、引用、图片和代码块；原始 HTML 默认转义，代码块保留 `language-*` 类供前端语法高亮和复制按钮使用。
+- 新增分类/标签公开查询及管理员 CRUD：`GET /api/categories`、`GET /api/tags`、`/api/admin/categories/**`、`/api/admin/tags/**`。
+- 新增评论接口：`GET/POST /api/articles/{id}/comments`、`GET /api/admin/comments`、`PUT /api/admin/comments/{id}/status`、`DELETE /api/admin/comments/{id}`；评论提交需要登录，公开查询仅返回已审核评论。
+- 新增 PostgreSQL 搜索入口 `GET /api/search?q=...`，搜索标题、摘要、分类名和标签名，V1 不引入 Elasticsearch。
+- 公开阅读、评论提交、管理员文章/分类/标签/评论接口已接入现有 Spring Security、CSRF、统一响应和 TraceId 体系；OpenAPI 增加 Article、Taxonomy、Comment 标签。
+
+验证结果：
+
+- Java 21 下 `mvn.cmd -DskipTests compile`：通过。
+- Java 21 下阶段三新增 Markdown、文章、评论和 MockMvc 测试：14 个通过。
+- Java 21 下 `mvn.cmd test`：60 个通过，1 个 Testcontainers PostgreSQL 集成测试按默认开关跳过。
+- Mapper 注解/动态 SQL 元数据解析测试已覆盖文章、文章标签、分类、标签和评论 Mapper。
+- `git diff --check`：通过。
+
+未执行项目、风险与下一阶段入口：
+
+- 未启动应用，未连接、迁移或写入本地 `localhost:5432/xinyu` 数据库；V3/V4 SQL 仅提交到仓库，需用户审核后自行执行。
+- 默认未执行 Testcontainers PostgreSQL 集成测试（需要 Docker）；可在隔离环境执行 `mvn.cmd -Dit.postgres=true verify`。
+- Markdown 后端已输出安全 HTML 和 `language-*` 代码类，实际双栏编辑器、语法高亮主题和复制按钮属于前端接入工作，当前未修改 React/Vue 前端。
+- 当前搜索使用 `ILIKE + EXISTS`，中小规模可用；数据量增长后应评估 PostgreSQL FTS/pg_trgm，再决定是否引入 Elasticsearch。
+- 下一阶段入口：前端文章编辑/预览页面、图片上传、文章版本历史、全文检索增强和评论反垃圾策略。
+
 ### 第二阶段：用户与鉴权完善
 
 已完成：

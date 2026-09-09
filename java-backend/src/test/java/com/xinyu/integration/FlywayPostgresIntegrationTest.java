@@ -45,7 +45,8 @@ class FlywayPostgresIntegrationTest {
                 POSTGRES.getPassword());
              ResultSet tables = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"})) {
             Set<String> tableNames = tableNames(tables);
-            assertThat(tableNames).contains("users", "refresh_tokens");
+            assertThat(tableNames).contains("users", "refresh_tokens", "categories", "tags",
+                    "articles", "article_tags", "comments");
         }
     }
 

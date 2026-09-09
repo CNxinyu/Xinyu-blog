@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.OffsetDateTime;
 
 @Configuration(proxyBeanMethods = false)
-@MapperScan({"com.xinyu.user.mapper", "com.xinyu.auth.mapper"})
+@MapperScan({"com.xinyu.user.mapper", "com.xinyu.auth.mapper", "com.xinyu.article.mapper", "com.xinyu.comment.mapper"})
 public class MybatisConfig {
 
     @Bean

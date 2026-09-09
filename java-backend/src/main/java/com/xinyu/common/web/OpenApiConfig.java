@@ -16,7 +16,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                 description = "HTTP API for the Xinyu Blog modular monolith"),
         tags = {
                 @Tag(name = "Auth", description = "Registration, login and token lifecycle"),
-                @Tag(name = "User", description = "Profile management, roles and administrator user management")
+                @Tag(name = "User", description = "Profile management, roles and administrator user management"),
+                @Tag(name = "Article", description = "Markdown articles and publication lifecycle"),
+                @Tag(name = "Taxonomy", description = "Article categories and tags"),
+                @Tag(name = "Comment", description = "Article comments and moderation")
         })
 @SecurityScheme(
         name = "bearerAuth",

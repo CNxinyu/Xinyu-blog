@@ -2,6 +2,7 @@ package com.xinyu.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xinyu.auth.entity.RefreshTokenEntity;
+import com.xinyu.common.mybatis.typehandler.PostgreSqlUuidTypeHandler;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -15,7 +16,8 @@ public interface RefreshTokenMapper extends BaseMapper<RefreshTokenEntity> {
     @Results(id = "refreshTokenResult", value = {
             @Result(property = "id", column = "id", id = true),
             @Result(property = "userId", column = "user_id"),
-            @Result(property = "familyId", column = "family_id"),
+            @Result(property = "familyId", column = "family_id",
+                    typeHandler = PostgreSqlUuidTypeHandler.class),
             @Result(property = "tokenHash", column = "token_hash"),
             @Result(property = "deviceInfo", column = "device_info"),
             @Result(property = "expiresAt", column = "expires_at"),
@@ -46,7 +48,8 @@ public interface RefreshTokenMapper extends BaseMapper<RefreshTokenEntity> {
     @Update("""
             UPDATE refresh_tokens
             SET revoked_at = #{revokedAt}, revocation_reason = #{reason}
-            WHERE family_id = #{familyId} AND revoked_at IS NULL
+            WHERE family_id = #{familyId,jdbcType=OTHER,typeHandler=com.xinyu.common.mybatis.typehandler.PostgreSqlUuidTypeHandler}
+              AND revoked_at IS NULL
             """)
     int revokeFamily(@Param("familyId") UUID familyId,
                      @Param("revokedAt") OffsetDateTime revokedAt,

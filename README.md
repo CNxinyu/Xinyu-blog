@@ -1,9 +1,14 @@
-Time:2025.12.29
+updateTime/更新时间:2026.9.8
 
-React-frontend 主页前端
+## **开发阶段**
 
-Go-backend 主页后端
+第一阶段——基础功能实现
 
-Springboot- backend 管理系统后端
+## 模块
 
-Vue-frontend 管理系统前端
+React-frontend 博客前端
+
+Springboot- backend 博客后端
+
+docs 开发文档
+

@@ -1,8 +1,8 @@
 package com.xinyu.repo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -10,10 +10,11 @@ import java.util.Optional;
 @Repository
 public class VerifyCodeRedisRepo {
     private final StringRedisTemplate redis;
-    private final ObjectMapper om = new ObjectMapper();
+    private final JsonMapper jsonMapper;
 
-    public VerifyCodeRedisRepo(StringRedisTemplate redis) {
+    public VerifyCodeRedisRepo(StringRedisTemplate redis, JsonMapper jsonMapper) {
         this.redis = redis;
+        this.jsonMapper = jsonMapper;
     }
 
     public String tokenKey(String vid) { return "vc:token:" + vid; }
@@ -52,12 +53,12 @@ public class VerifyCodeRedisRepo {
     }
 
     public String toJson(Object obj) {
-        try { return om.writeValueAsString(obj); }
+        try { return jsonMapper.writeValueAsString(obj); }
         catch (Exception e) { throw new RuntimeException(e); }
     }
 
     public <T> T fromJson(String json, Class<T> cls) {
-        try { return om.readValue(json, cls); }
+        try { return jsonMapper.readValue(json, cls); }
         catch (Exception e) { throw new RuntimeException(e); }
     }
 }

@@ -1,3 +1,23 @@
+```
+Go
+   +
+Kratos
+   +
+gRPC
+```
+
+```
+Python
+   +
+FastAPI
+   +
+Pydantic
+   +
+LangGraph / OpenAI Agents SDK
+```
+
+
+
 # 问题与解决
 
 ## 1.**环境和依赖**

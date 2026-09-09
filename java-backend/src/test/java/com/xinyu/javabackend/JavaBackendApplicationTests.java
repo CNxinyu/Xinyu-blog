@@ -1,13 +1,15 @@
 package com.xinyu.javabackend;
 
+import com.xinyu.common.api.ApiResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import static org.assertj.core.api.Assertions.assertThat;
+
 class JavaBackendApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void foundationResponseIsAvailableWithoutExternalServices() {
+		assertThat(ApiResponse.success("ok").code()).isZero();
 	}
 
 }

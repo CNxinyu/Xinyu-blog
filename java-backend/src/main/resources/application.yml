@@ -98,3 +98,10 @@ xinyu:
         0IapAJ7DaCj2QaoKG/H932IFEGZXW2Rv3A9CRL8iJ6ixUNA51jeIrtHNROiJmDKl
         EQIDAQAB
         -----END PUBLIC KEY-----
+    rate-limit:
+      register-max-attempts: 10
+      register-window: 1h
+      login-ip-max-attempts: 30
+      login-ip-window: 10m
+      login-identifier-failure-max-attempts: 5
+      login-identifier-failure-window: 15m

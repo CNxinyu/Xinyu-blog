@@ -103,6 +103,26 @@ class RefreshTokenServiceTest {
         assertThat(captor.getValue().getFamilyId()).isEqualTo(entity.getFamilyId());
     }
 
+    @Test
+    void disabledUserCannotRefreshAndRevokesFamily() {
+        RefreshTokenEntity entity = new RefreshTokenEntity();
+        entity.setId(9L);
+        entity.setUserId(7L);
+        entity.setFamilyId(UUID.randomUUID());
+        entity.setExpiresAt(OffsetDateTime.now(ZoneOffset.UTC).plusDays(1));
+        when(refreshTokenMapper.selectForUpdate(anyString())).thenReturn(entity);
+        UserEntity user = activeUser(7L);
+        user.setStatus("DISABLED");
+        when(userService.requireById(7L)).thenReturn(user);
+
+        assertThatThrownBy(() -> refreshTokenService.rotate("old-token"))
+                .isInstanceOf(BusinessException.class)
+                .extracting(exception -> ((BusinessException) exception).getErrorCode())
+                .isEqualTo(ErrorCode.USER_DISABLED);
+        verify(refreshTokenMapper).revokeFamily(any(UUID.class), any(OffsetDateTime.class),
+                org.mockito.ArgumentMatchers.eq("USER_DISABLED"));
+    }
+
     private UserEntity activeUser(Long id) {
         UserEntity user = new UserEntity();
         user.setId(id);

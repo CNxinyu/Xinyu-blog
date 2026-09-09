@@ -9,8 +9,10 @@ public enum ErrorCode {
     AUTH_INVALID_CREDENTIALS(40100, "invalid credentials", HttpStatus.UNAUTHORIZED),
     AUTH_TOKEN_INVALID(40101, "invalid or expired token", HttpStatus.UNAUTHORIZED),
     AUTH_TOKEN_REUSED(40102, "refresh token is no longer valid", HttpStatus.UNAUTHORIZED),
+    AUTH_RATE_LIMITED(42900, "too many authentication attempts", HttpStatus.TOO_MANY_REQUESTS),
     FORBIDDEN(40300, "access denied", HttpStatus.FORBIDDEN),
     USER_DISABLED(40301, "user account is disabled", HttpStatus.FORBIDDEN),
+    LAST_ADMIN_PROTECTED(40302, "the last administrator cannot be changed", HttpStatus.FORBIDDEN),
     NOT_FOUND(40400, "resource not found", HttpStatus.NOT_FOUND),
     DUPLICATE_RESOURCE(40900, "resource already exists", HttpStatus.CONFLICT),
     INTERNAL_ERROR(50000, "internal server error", HttpStatus.INTERNAL_SERVER_ERROR);

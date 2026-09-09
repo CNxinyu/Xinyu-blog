@@ -28,6 +28,34 @@
 
 更新时间：2026-09-09
 
+### 第二阶段：用户与鉴权完善
+
+已完成：
+
+- 注册接口统一标准化用户名和邮箱，注册后创建 `USER + ACTIVE` 用户且不自动登录；登录支持用户名或邮箱，错误凭据统一返回 401，禁用用户返回 403。
+- 增加基于 Redis 的注册/登录防爆破限流：单 IP 注册 10 次/小时、单 IP 登录 30 次/10 分钟、单 IP+账号登录失败 5 次/15 分钟；超限返回 429 和 `Retry-After`，Redis 不可用时告警并降级放行。
+- 完善 Refresh Cookie 轮换、Token Family 重放检测、Family 撤销、当前设备登出和幂等清理；禁用用户或角色变更时撤销全部 Refresh 会话。
+- JWT 继续使用 RS256，Claim 限定为 `sub`、`roles`、`iss`、`iat`、`exp`、`jti`；保持 15 分钟无状态 Access Token 和 `ROLE_USER`/`ROLE_ADMIN` 映射。
+- 新增 `GET/PATCH /api/v1/users/me` Profile 接口，仅允许局部修改 `nickname`、`avatarUrl`、`bio`，显式 `null` 可清空；保留 `/api/v1/auth/me` 兼容别名。
+- 新增 `PATCH /api/v1/admin/users/{id}/role` 角色管理；增加禁止自我降级、禁止降级最后有效管理员，以及状态变更的最后管理员保护。
+- 完善 Auth、Profile、Admin、OpenAPI、Actuator、CSRF、401/403 访问规则；唯一键异常映射为 409，其他数据库完整性异常不再伪装为重复资源。
+- 未新增数据库迁移 SQL，继续复用现有 `users` 与 `refresh_tokens` 表结构。
+
+验证结果：
+
+- Java 21 下 `mvn.cmd -DskipTests compile`：通过。
+- Java 21 下 `mvn.cmd test`/`mvn.cmd verify`：通过；46 个测试通过，1 个 Testcontainers PostgreSQL 集成测试按默认开关跳过。
+- MockMvc 安全测试覆盖 CSRF、登录、Refresh Cookie、Logout 清理、Profile 鉴权、普通用户拒绝管理员接口和管理员访问：10 个通过。
+- AuthService、JWT、Refresh Cookie、限流、Profile 校验、用户服务及 Token 撤销单元测试均通过。
+- `git diff --check`：通过。
+
+未执行项目、风险与下一阶段入口：
+
+- 未启动应用，未连接、迁移或写入本地 `localhost:5432/xinyu` 数据库；Flyway SQL 仍需由用户审核后自行执行。
+- 默认未执行 Testcontainers PostgreSQL 集成测试（需 Docker，并使用临时测试数据库）；可在隔离环境执行 `mvn.cmd -Dit.postgres=true verify`。
+- 当前 Redis 限流在 Redis 不可用时按内部测试策略 fail-open；生产环境应配置可用 Redis、外部 JWT/数据库 Secret，并补充审计、监控和密钥轮换。
+- 下一阶段入口：文章/评论等业务模块、审计日志、密码找回与邮箱验证等业务能力。
+
 ### 第一阶段：Java Backend 工程化基础
 
 已完成：

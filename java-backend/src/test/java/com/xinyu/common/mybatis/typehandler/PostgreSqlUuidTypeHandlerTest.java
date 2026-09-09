@@ -1,6 +1,7 @@
 package com.xinyu.common.mybatis.typehandler;
 
 import com.xinyu.auth.mapper.RefreshTokenMapper;
+import com.xinyu.user.mapper.UserMapper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class PostgreSqlUuidTypeHandlerTest {
         configuration.getTypeHandlerRegistry().register(PostgreSqlUuidTypeHandler.class);
 
         assertThatCode(() -> configuration.addMapper(RefreshTokenMapper.class))
+                .doesNotThrowAnyException();
+        assertThatCode(() -> configuration.addMapper(UserMapper.class))
                 .doesNotThrowAnyException();
     }
 }

@@ -54,4 +54,13 @@ public interface RefreshTokenMapper extends BaseMapper<RefreshTokenEntity> {
     int revokeFamily(@Param("familyId") UUID familyId,
                      @Param("revokedAt") OffsetDateTime revokedAt,
                      @Param("reason") String reason);
+
+    @Update("""
+            UPDATE refresh_tokens
+            SET revoked_at = #{revokedAt}, revocation_reason = #{reason}
+            WHERE user_id = #{userId} AND revoked_at IS NULL
+            """)
+    int revokeAllByUserId(@Param("userId") Long userId,
+                          @Param("revokedAt") OffsetDateTime revokedAt,
+                          @Param("reason") String reason);
 }

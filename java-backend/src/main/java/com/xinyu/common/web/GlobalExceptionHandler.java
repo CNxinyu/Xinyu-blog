@@ -7,7 +7,9 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -88,10 +90,16 @@ public class GlobalExceptionHandler {
         return response(ErrorCode.INVALID_ARGUMENT, null, null);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(DataIntegrityViolationException exception) {
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateKey(DuplicateKeyException exception) {
         log.warn("Data integrity violation, traceId={}", TraceContext.currentTraceId());
         return response(ErrorCode.DUPLICATE_RESOURCE, null, null);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(DataIntegrityViolationException exception) {
+        log.error("Unexpected data integrity violation, traceId={}", TraceContext.currentTraceId());
+        return response(ErrorCode.INTERNAL_ERROR, null, null);
     }
 
     @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
@@ -124,7 +132,13 @@ public class GlobalExceptionHandler {
     }
 
     private <T> ResponseEntity<ApiResponse<T>> response(ErrorCode code, String message, T data) {
-        return ResponseEntity.status(code.getHttpStatus())
-                .body(ApiResponse.failure(code, message == null ? code.getMessage() : message, data));
+        BodyBuilder builder = ResponseEntity.status(code.getHttpStatus());
+        if (code == ErrorCode.AUTH_RATE_LIMITED && data instanceof Map<?, ?> details) {
+            Object retryAfter = details.get("retryAfterSeconds");
+            if (retryAfter != null) {
+                builder.header("Retry-After", String.valueOf(retryAfter));
+            }
+        }
+        return builder.body(ApiResponse.failure(code, message == null ? code.getMessage() : message, data));
     }
 }

@@ -32,7 +32,6 @@ public class JwtTokenService {
                 .issuedAt(issuedAt)
                 .expiresAt(expiresAt)
                 .id(UUID.randomUUID().toString())
-                .claim("username", principal.getUsername())
                 .claim("roles", List.of(principal.getRole()))
                 .build();
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256)

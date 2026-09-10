@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.Signature;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -28,8 +29,11 @@ public class JwtKeyConfig {
 
     @Bean
     public RSAKey rsaKey(JwtProperties properties) {
-        return new RSAKey.Builder(parsePublicKey(properties.getPublicKeyPem()))
-                .privateKey(parsePrivateKey(properties.getPrivateKeyPem()))
+        RSAPublicKey publicKey = parsePublicKey(properties.getPublicKeyPem());
+        RSAPrivateKey privateKey = parsePrivateKey(properties.getPrivateKeyPem());
+        validateKeyPair(publicKey, privateKey);
+        return new RSAKey.Builder(publicKey)
+                .privateKey(privateKey)
                 .keyID(properties.getKeyId())
                 .build();
     }
@@ -70,6 +74,26 @@ public class JwtKeyConfig {
                     .generatePrivate(new PKCS8EncodedKeySpec(bytes));
         } catch (Exception exception) {
             throw new IllegalStateException("invalid JWT private key", exception);
+        }
+    }
+
+    private void validateKeyPair(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+        try {
+            byte[] payload = "xinyu-jwt-key-validation".getBytes(StandardCharsets.US_ASCII);
+            Signature signature = Signature.getInstance("SHA256withRSA");
+            signature.initSign(privateKey);
+            signature.update(payload);
+            byte[] signed = signature.sign();
+
+            signature.initVerify(publicKey);
+            signature.update(payload);
+            if (!signature.verify(signed)) {
+                throw new IllegalStateException("JWT RSA public and private keys do not form a valid pair");
+            }
+        } catch (IllegalStateException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new IllegalStateException("invalid JWT RSA key pair", exception);
         }
     }
 

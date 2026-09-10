@@ -95,6 +95,22 @@ class JwtTokenServiceTest {
                 .isInstanceOf(JwtValidationException.class);
     }
 
+    @Test
+    void rejectsMismatchedRsaKeyPairAtStartup() throws Exception {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+        generator.initialize(2048);
+        KeyPair privateKeyPair = generator.generateKeyPair();
+        KeyPair publicKeyPair = generator.generateKeyPair();
+
+        JwtProperties properties = new JwtProperties();
+        properties.setPrivateKeyPem(pem("PRIVATE KEY", privateKeyPair.getPrivate().getEncoded()));
+        properties.setPublicKeyPem(pem("PUBLIC KEY", publicKeyPair.getPublic().getEncoded()));
+
+        assertThatThrownBy(() -> new JwtKeyConfig().rsaKey(properties))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("JWT RSA public and private keys do not form a valid pair");
+    }
+
     private String pem(String type, byte[] encoded) {
         String body = Base64.getMimeEncoder(64, "\n".getBytes(StandardCharsets.US_ASCII)).encodeToString(encoded);
         return "-----BEGIN " + type + "-----\n" + body + "\n-----END " + type + "-----";

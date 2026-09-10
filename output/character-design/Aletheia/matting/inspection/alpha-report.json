@@ -1,0 +1,61 @@
+{
+  "sourceSha256": "1a3737b22f302082d1d317e2e6e7ce893cdc016bdddabf4070475bf5fc2488f0",
+  "width": 1024,
+  "height": 1536,
+  "transparent": 836842,
+  "partial": 41606,
+  "opaque": 694416,
+  "preservedInterior": 688458,
+  "samples": [
+    {
+      "name": "exterior",
+      "x": 0,
+      "y": 0,
+      "alpha": 0
+    },
+    {
+      "name": "hair gap left",
+      "x": 270,
+      "y": 350,
+      "alpha": 0
+    },
+    {
+      "name": "hair gap right",
+      "x": 731,
+      "y": 407,
+      "alpha": 0
+    },
+    {
+      "name": "face",
+      "x": 475,
+      "y": 225,
+      "alpha": 255
+    },
+    {
+      "name": "shoulder",
+      "x": 399,
+      "y": 318,
+      "alpha": 255
+    },
+    {
+      "name": "ivory corset",
+      "x": 480,
+      "y": 425,
+      "alpha": 255
+    },
+    {
+      "name": "white skirt",
+      "x": 488,
+      "y": 611,
+      "alpha": 255
+    },
+    {
+      "name": "white feather",
+      "x": 710,
+      "y": 533,
+      "alpha": 255
+    }
+  ],
+  "foregroundComponents": 31,
+  "asset": "C:\\Users\\87773\\Desktop\\Xinyu-blog\\output\\character-design\\Aletheia\\matting\\aletheia-guide-front-matted.png"
+}

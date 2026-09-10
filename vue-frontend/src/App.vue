@@ -1,14 +1,3 @@
 <template>
-<!-- <GameView></GameView> -->
-
- <div>
-    Hello World
- </div>
- 
+  <RouterView />
 </template>
-<script setup>
-
-</script>
-<style scoped>
-
-</style>

@@ -28,6 +28,52 @@
 
 更新时间：2026-09-10
 
+### 第五阶段：Xinyu·Aletheia 后台管理端
+
+#### 2026-09-10 首个管理员初始化与 JWT 签名修复
+
+- 经用户明确授权完成一次性本地管理员初始化：通过注册接口生成后端标准 `{bcrypt}` 密码哈希，再将该账号提升为 `ADMIN + ACTIVE`；未记录明文账号密码，未执行建表、迁移或其他业务数据修改。
+- 定位登录 500 的根因为原内部测试 RSA 私钥虽可解析且与公钥模数一致，但其 CRT 参数无法被 Java 21 `SHA256withRSA` 完成签名，异常为 `RSA private key operation failed`。
+- 将 `application.yml` 中的内部测试 RSA-2048 密钥轮换为可在 Java 21 正常签发/验签的新密钥对，并同步更新 `key-id`；此密钥仍只允许内部测试使用，预发布或生产必须迁移到外部 Secret。
+- `JwtKeyConfig` 新增启动期公私钥签发/验签自检；密钥损坏或不匹配时应用会在启动阶段明确失败，不再延迟到用户登录后返回 500。`JwtTokenServiceTest` 增加不匹配密钥拒绝测试。
+
+验证结果：
+
+- Java 21 下 `mvn.cmd -Dtest=JwtTokenServiceTest test`：3 个通过。
+- Java 21 下 `mvn.cmd test`：61 个通过，1 个 Testcontainers PostgreSQL 集成测试按默认开关跳过。
+- 使用禁用 Flyway、独立端口的临时实例复现旧密钥异常并验证新构建；随后重启本机 `127.0.0.1:8080` 后端，健康检查为 `UP`，真实 `登录 → /api/v1/auth/me → 退出` 链路通过，管理员角色为 `ADMIN`，验证产生的 Refresh Token 已撤销。
+
+未执行项目、风险与下一阶段入口：
+
+- 未执行 Flyway、数据库结构变更或迁移 SQL；除用户明确授权的首个管理员注册和角色提升外，未修改其他业务数据。当前运行中的本地后端显式禁用了 Flyway。
+- RSA 测试私钥仍位于仓库配置，仅符合当前内部测试约定；后续进入预发布前必须轮换为外部 Secret，并同步调整 `key-id`。
+- 下一入口：使用 Vue 后台完成真实页面联调；生产化前补充外部 Secret、Secure Cookie、同源反向代理及密钥轮换流程。
+
+#### 2026-09-10 Vite + Vue 管理后台完成
+
+- 将 `vue-frontend` 的 Vite + Vue 3 + TypeScript Demo 完整替换为 Aletheia 管理后台；保留用户此前将旧 Vue 游戏示例升级为 TypeScript Demo、删除旧游戏素材和切换 npm 锁文件的未提交改动，并在其上继续开发。
+- 新增 Vue Router、Pinia、Axios、Element Plus、Element Plus Icons 与 DOMPurify；完成 `/login`、`/dashboard`、`/articles`、`/articles/new`、`/articles/:id/edit`、`/categories`、`/tags`、`/comments`、`/users` 和后台 404 路由。
+- 登录流程接入现有 CSRF、Bearer Access Token、HttpOnly Refresh Cookie 和 Token 轮换契约：CSRF Token 与 Access Token 只保存在内存；刷新页面自动恢复管理员会话；并发 401 合并为一次 Refresh；失败返回登录页并保留目标路由；非 `ADMIN + ACTIVE` 用户会立即退出并拒绝进入后台。
+- Dashboard 复用现有接口并行聚合文章总数、发布数、草稿数、待审核评论、用户、分类和标签数量，展示最近更新文章；单项失败不会阻断其他指标。未新增 Java 聚合接口。
+- 文章管理支持关键词、状态、分类、标签筛选及分页，Markdown 双栏编辑、450ms 防抖服务端预览、DOMPurify 二次净化、未保存离开提醒、草稿/发布/归档和永久删除；分类/标签、评论审核与用户角色/状态管理均接入第三阶段和第二阶段已有接口及保护规则。
+- 后台使用深黑褐、暗紫、古铜和象牙色的克制魔法视觉；桌面侧栏支持折叠，窄屏改为抽屉导航和编辑/预览切换；未新增人物或场景图片。开发环境通过 `VITE_API_PROXY_TARGET` 将同源 `/api/**` 代理到默认 `http://127.0.0.1:8080`。
+- 新增 ESLint、Vitest 和 4 组测试文件，覆盖管理员/普通用户登录、会话恢复失败、并发 Refresh、路由守卫、安全重定向、Dashboard 聚合和部分失败、错误码/TraceId，以及文章生命周期、分类标签、评论和用户管理接口契约。
+
+验证结果：
+
+- 当前本机 Node 24.9.0、npm 11.11.0 下 `npm run lint`：通过，无警告。
+- `npm run test`：4 个测试文件、12 个测试通过；使用 Mock API，未启动 Spring Boot、Flyway 或数据库。
+- `npm run build`：通过；`vue-tsc` 类型检查和 Vite 8.2.2 production build 成功。Element Plus 全量引入使主入口压缩前约 874 kB，Vite 给出大 chunk 提示但不影响构建。
+- 本地 Vite 仅监听 `127.0.0.1:4175`；非浏览器 HTTP 检查 `/login` 与 `/dashboard` 均返回 200，检查后服务器已关闭。
+- Sites 通用 `build-site.mjs` 仍因当前运行时找不到项目内 `node_modules/npm/bin/npm-cli.js` 与 `npm-prefix.js` 而无法启动；项目自身 npm lint/test/build 均成功，不影响本地交付。
+
+未执行项目、风险与下一阶段入口：
+
+- 未修改或启动 Java 后端，未连接、迁移或写入 PostgreSQL，未新增 SQL，未部署，也未执行截图或浏览器 DOM 自动化。
+- 当前本机 Node 24.9.0 在安装时对 npm 间接依赖给出要求 Node 24.15+ 的 `EBADENGINE` 提示；实际验证已通过，后续应切换到项目约定的 Node 24.19.0 消除环境告警。
+- 生产环境必须由反向代理同源提供静态文件和 `/api/**`，并按后端约定启用 Secure Cookie、迁移数据库/JWT/邮件 Secret；本阶段不提供跨域 Cookie 方案。
+- 下一入口：使用真实管理员账号和已执行 V3/V4 迁移的本地后端完成联调；后续可按实际体积需求改为 Element Plus 按需导入，并继续图片上传、文章版本历史、批量操作和审计日志。
+
 ### 第四阶段：Xinyu·Aletheia 前台
 
 #### 2026-09-10 桌面对话框名字标签修复
